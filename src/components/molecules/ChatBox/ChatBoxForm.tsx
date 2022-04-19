@@ -5,6 +5,7 @@ import { webchatProps } from '../../WebChat/webchat.interface';
 
 interface BotBoxProps {
   automatedMessages: Message[];
+  formFieldsAndAutomatedMessages: Message[];
   handleSendMessage: (arg?: Message[]) => void;
 }
 
@@ -14,9 +15,9 @@ export const ChatBoxForm: FC<webchatProps & BotBoxProps> = function ({
   email,
   handleSendMessage,
   setSetingNameAndEmail,
-  setOutOfHourWarning,
   setName,
   setEmail,
+  formFieldsAndAutomatedMessages,
 }) {
   const [validationErrors, setValidationErrors] = useState('');
 
@@ -51,7 +52,7 @@ export const ChatBoxForm: FC<webchatProps & BotBoxProps> = function ({
     // validateBusinessTime();
     await handleSetNameAndEmailOnStorage();
     if (!sessionStorage.getItem('chatId')) {
-      handleSendMessage(automatedMessages);
+      handleSendMessage(formFieldsAndAutomatedMessages || automatedMessages);
     }
   };
 

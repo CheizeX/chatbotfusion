@@ -121,13 +121,14 @@ export enum FormTypes {
   TEXTAREA = 'textarea',
   NUMBER = 'number',
   PASSWORD = 'password',
-  EMAIL = 'email',
+  // EMAIL = 'email',
   TEL = 'tel',
 }
 export interface FormProps {
   name: string;
   type: FormTypes;
   placeholder?: string;
+  value?: string;
 }
 export interface SuggestionsProps {
   icon?: string;

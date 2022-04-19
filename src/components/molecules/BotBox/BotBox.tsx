@@ -6,6 +6,7 @@ import React, {
   useEffect,
   useRef,
   useState,
+  Fragment,
 } from 'react';
 import { ReactSVG } from 'react-svg';
 import { MdAssignmentReturn } from 'react-icons/md';
@@ -15,7 +16,6 @@ import {
   ContentTypes,
   DERIVATIONS,
   FormProps,
-  FormTypes,
   Message,
   MessageFrom,
   SuggestionsProps,
@@ -25,9 +25,10 @@ import { webchatProps } from '../../WebChat/webchat.interface';
 import { Forms } from '../Forms/Forms';
 
 interface BotBoxProps {
-  setToggleBotWithAgent: Dispatch<SetStateAction<boolean>>;
   automatedMessages: Message[];
+  setToggleBotWithAgent: Dispatch<SetStateAction<boolean>>;
   setAutomatedMessages: Dispatch<SetStateAction<Message[]>>;
+  setFormFieldsAndAutomatedMessages: Dispatch<SetStateAction<Message[]>>;
 }
 
 export const BotBox: FC<webchatProps & BotBoxProps> = function ({
@@ -35,34 +36,57 @@ export const BotBox: FC<webchatProps & BotBoxProps> = function ({
   automatedMessages,
   setAutomatedMessages,
   base64Avatar,
+  setFormFieldsAndAutomatedMessages,
 }) {
   const dialogueBoxRef = useRef<HTMLDivElement>(null);
   const [loadingMessage, setLoadingMessage] = useState(false);
   const [lastTime, setLastTime] = useState('');
   const [suggestions, setSuggestions] = useState(suggestionsObjNew);
-  const [isFormActive, setIsFormActive] = useState(true);
-  const [formFields, setFormFields] = useState<FormProps[]>([
-    {
-      name: 'Nombre',
-      type: FormTypes.TEXT,
-      placeholder: 'Ingresar nombre',
-    },
-    {
-      name: 'Expediente',
-      type: FormTypes.TEXT,
-      placeholder: 'Ingresar núm. de expediente',
-    },
-  ]);
-
-  const [formFieldsValuesObj, setFormFieldsValuesObj] = useState<{
-    [key: string]: string;
-  }>({});
-
-  console.log('[FORM FIELDS]', formFields);
+  const [isFormActive, setIsFormActive] = useState(false);
+  const [formFields, setFormFields] = useState<FormProps[]>([]);
+  const [derivationFormName, setDerivationFormName] = useState('');
 
   const scrollToBottom = useCallback(() => {
     dialogueBoxRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [dialogueBoxRef]);
+
+  const addFormValuesToMessage = () => {
+    // acomodo los campos del FORM para transformarlos en mensajes
+    const formValues = formFields.reduce(
+      (acc, field) => ({ ...acc, [field.name]: field.value }),
+      {},
+    );
+    const fieldValues = Object.entries(formValues).map((key) => ({
+      name: key[0],
+      value: key[1],
+    }));
+    const fieldsToMessages = fieldValues.map((field) => {
+      return {
+        contentType: ContentTypes.TEXT,
+        from: MessageFrom.USER,
+        content: `${field.name}: ${field.value}`,
+      };
+    });
+
+    // valido que el formulario sea enviado completo
+    if (fieldValues.every((field) => field.value)) {
+      // agrego los campos del FORM al resto de los mensajes
+      setFormFieldsAndAutomatedMessages([
+        ...automatedMessages,
+        {
+          contentType: ContentTypes.TEXT,
+          from: MessageFrom.BOT,
+          content: `Formulario [ ${derivationFormName} ]`,
+        },
+        ...fieldsToMessages,
+      ]);
+      setFormFields([]);
+      setIsFormActive(false);
+      setLoadingMessage(false);
+      scrollToBottom();
+      setToggleBotWithAgent(true);
+    }
+  };
 
   const handleDerivation = (derivation: DERIVATIONS, suggestion?: any) => {
     setAutomatedMessages([
@@ -79,7 +103,7 @@ export const BotBox: FC<webchatProps & BotBoxProps> = function ({
       if (derivation === DERIVATIONS.AGENT) {
         setToggleBotWithAgent(true);
       }
-    }, 3000);
+    }, 2000);
   };
   const handleAutomatedMessages = (suggestion: any) => {
     const currentTime = new Date();
@@ -101,6 +125,7 @@ export const BotBox: FC<webchatProps & BotBoxProps> = function ({
       }
       if (suggestion.derivation === DERIVATIONS.FORM) {
         setFormFields(suggestion.derivationForm);
+        setDerivationFormName(suggestion.name);
         setIsFormActive(true);
       }
       return;
@@ -175,9 +200,9 @@ export const BotBox: FC<webchatProps & BotBoxProps> = function ({
         {automatedMessages &&
           automatedMessages.map((message, index) =>
             message.from === MessageFrom.BOT ? (
-              <>
+              <Fragment key={index.toString()}>
                 {/* SOLO CONTESTACIONES DEL BOT DEL LADO IZQUIERDO */}
-                <div key={index.toString()}>
+                <div>
                   <div className="bot-dialogue__bot-ewc-class">
                     <div className="bot-image-container__bot-ewc-class">
                       {/* SI HAY UN ICONO DENTRO DE LA OPCION, SE PONE EL ICONO Y SINO EL AVATAR X DEFECTO */}
@@ -218,11 +243,11 @@ export const BotBox: FC<webchatProps & BotBoxProps> = function ({
                     </div>
                   </div>
                 </div>
-              </>
+              </Fragment>
             ) : (
-              <>
+              <Fragment key={index.toString()}>
                 {/* ELECCIONES DEL USUARIO DEL LADO DERECHO */}
-                <div key={index.toString()}>
+                <div>
                   <div className="user-dialogue__bot-ewc-class">
                     <div
                       className={
@@ -235,7 +260,7 @@ export const BotBox: FC<webchatProps & BotBoxProps> = function ({
                     </div>
                   </div>
                 </div>
-              </>
+              </Fragment>
             ),
           )}
 
@@ -274,7 +299,7 @@ export const BotBox: FC<webchatProps & BotBoxProps> = function ({
               <div className="form-modal__bot-ewc-class">
                 <div>
                   <div className="form-text-before__bot-ewc-class">
-                    Completar formulario
+                    Datos necesarios para continuar
                     <button
                       type="button"
                       onClick={() => setIsFormActive(false)}>
@@ -282,11 +307,14 @@ export const BotBox: FC<webchatProps & BotBoxProps> = function ({
                     </button>
                   </div>
                   <div className="form-cont__bot-ewc-class">
-                    <Forms formFields={formFields} />
+                    <Forms
+                      formFields={formFields}
+                      setFormFields={setFormFields}
+                    />
                     <button
                       type="button"
                       className="form-button__bot-ewc-class"
-                      onClick={() => console.log('enviar')}>
+                      onClick={addFormValuesToMessage}>
                       Contactarme con un agente
                     </button>
                   </div>
@@ -299,7 +327,6 @@ export const BotBox: FC<webchatProps & BotBoxProps> = function ({
               JSON.stringify(suggestionsObjNew) && (
               <button
                 className="automatized-text-back__bot-ewc-class"
-                key="xxx"
                 type="button"
                 onClick={() =>
                   handleAutomatedMessages({

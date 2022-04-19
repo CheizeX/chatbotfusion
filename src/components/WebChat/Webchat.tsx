@@ -2,8 +2,9 @@ import React, { FC, useCallback, useEffect, useState } from 'react';
 import io from 'socket.io-client';
 import axios, { AxiosRequestConfig } from 'axios';
 import Swal from 'sweetalert2';
-import { IoIosArrowBack } from 'react-icons/io';
+import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 import { VscListSelection } from 'react-icons/vsc';
+import { MdOutlineSupportAgent } from 'react-icons/md';
 import { Message } from '../shared';
 import { OutOfHourWarningComponent } from '../molecules/InformationMessages/OutOfHourWarning/OutOfHourWarning';
 import { Assistant } from '../molecules/Assistant/Assistant';
@@ -40,6 +41,8 @@ export const WebChat: FC<webchatProps> = function () {
   const [automatedMessages, setAutomatedMessages] = useState<Message[]>(
     !sessionStorage.getItem('chatId') && initialMessage,
   );
+  const [formFieldsAndAutomatedMessages, setFormFieldsAndAutomatedMessages] =
+    useState<Message[]>([]);
 
   const getAvatar = useCallback(async () => {
     const { data } = await axios.get(processEnv.avatar);
@@ -125,6 +128,7 @@ export const WebChat: FC<webchatProps> = function () {
             'webchat_elipse_name',
           )} - ${sessionStorage?.getItem('webchat_elipse_email')}`,
         };
+
         try {
           setSendingMessage(true);
           const axiosConfig: AxiosRequestConfig = {
@@ -212,6 +216,14 @@ export const WebChat: FC<webchatProps> = function () {
     ],
   );
 
+  const handleBackToBot = () => {
+    setToggleBotWithAgent(false);
+    setFormFieldsAndAutomatedMessages([]);
+  };
+  const handleBackToForward = () => {
+    setToggleBotWithAgent(true);
+  };
+
   useEffect(() => {
     if (sessionStorage.getItem('chatId')) {
       const idChat = sessionStorage.getItem('chatId');
@@ -291,12 +303,28 @@ export const WebChat: FC<webchatProps> = function () {
               <button
                 type="button"
                 className="back-button__ewc-class"
-                onClick={() => setToggleBotWithAgent(false)}>
+                onClick={handleBackToBot}>
                 <IoIosArrowBack />
 
                 <div>
                   {' '}
                   <VscListSelection />{' '}
+                </div>
+                <span />
+              </button>
+            </div>
+          )}
+          {!toggleBotWithAgent && sessionStorage.getItem('chatId') && (
+            <div className="without-header-back-container__ewc-class">
+              <button
+                type="button"
+                className="back-button__ewc-class"
+                onClick={handleBackToForward}>
+                <IoIosArrowForward />
+
+                <div>
+                  {' '}
+                  <MdOutlineSupportAgent />{' '}
                 </div>
                 <span />
               </button>
@@ -339,6 +367,9 @@ export const WebChat: FC<webchatProps> = function () {
               automatedMessages={automatedMessages}
               setAutomatedMessages={setAutomatedMessages}
               base64Avatar={svgI}
+              setFormFieldsAndAutomatedMessages={
+                setFormFieldsAndAutomatedMessages
+              }
             />
           )}
 
@@ -356,6 +387,7 @@ export const WebChat: FC<webchatProps> = function () {
                 handleSendMessage={handleSendMessage}
                 setOutOfHourWarning={setOutOfHourWarning}
                 svgBack={svgBack}
+                formFieldsAndAutomatedMessages={formFieldsAndAutomatedMessages}
                 // setToggleBotWithAgent={setToggleBotWithAgent}
                 // toggleBotWithAgent={toggleBotWithAgent}
               />

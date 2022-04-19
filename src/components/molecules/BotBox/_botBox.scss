@@ -439,7 +439,7 @@
     padding: 5px 15px;
     margin: 5px 10px;
     height: fit-content;
-    min-height: 35px;
+    min-height: 30px;
     min-width: 45px;
     max-width: 100%;
     line-height: 1.4;
@@ -537,8 +537,8 @@
   border-radius: 0px;
   border-top-left-radius: 1px;
   border-top-right-radius: 1px;
-  border-bottom: 2px solid rgba($secondary, 0.9);
-  border-top: 3px solid rgba($secondary, 0.9);
+  border-bottom: 1px solid rgba($gray-8, 0.9);
+  border-top: 3px solid rgba($gray-8, 0.9);
   & > button {
     transition: all 0.2s ease-in-out;
     border: none;

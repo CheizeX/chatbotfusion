@@ -17,6 +17,12 @@
   color: $gray-10;
   font-weight: 500;
 }
+.form-field-name-bot-error__ewc-class {
+  margin-bottom: 5px;
+  padding-left: 10px;
+  color: tomato;
+  font-weight: 500;
+}
 .form-field-bot__ewc-class {
   height: 30px;
   margin-bottom: 10px;
@@ -33,19 +39,37 @@
     border: none;
   }
 }
-.form-button__bot-ewc-class {
-  transition: all 0.3s ease-in-out;
-  width: 100%;
+.form-field-bot-error__ewc-class {
   height: 30px;
-  background-image: linear-gradient(140deg, $secondary 0%, $main 180%);
+  margin-bottom: 10px;
+  width: 100%;
+  border-radius: 3px;
+  border: none;
+  padding: 0 10px;
+  outline: 2px solid tomato;
+  &::placeholder {
+    padding-left: 0px;
+    color: $gray-7;
+  }
+  &:focus {
+    border: none;
+  }
+}
+.form-button__bot-ewc-class {
+  transition: all 0.2s ease-in-out;
+  width: 100%;
+  height: 40px;
+  // background-image: linear-gradient(140deg, $secondary 0%, $main 180%);
   border: none;
   outline: 1px solid $gray-10;
   border-radius: 17px;
-  color: $gray-10;
+  color: $main;
   font-weight: 600;
   margin-top: 10px;
+  margin-bottom: 10px;
   &:hover {
-    transition: all 0.3s ease-in-out;
+    color: $gray-9;
+    transition: all 0.2s ease-in-out;
     cursor: pointer;
     background-image: linear-gradient(140deg, $secondary 30%, $main 150%);
   }

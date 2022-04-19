@@ -10,7 +10,6 @@ export const InputsBox: FC<webchatProps> = function ({
   chatInputDialogue,
   svgBack,
   outOfHourWarning,
-  setOutOfHourWarning,
   setUploadActive,
   setChatInputDialogue,
   handleSendMessage,
