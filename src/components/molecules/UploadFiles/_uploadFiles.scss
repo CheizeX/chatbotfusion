@@ -135,7 +135,7 @@
       margin-left: 0.3125rem;
       margin-right: 0.3125rem;
       color: $gray-10;
-      outline: 0.0625rem solid $gray-10;
+      border: 0.125rem solid $gray-10;
       word-wrap: break-word;
       background-image: linear-gradient(
         170deg,
@@ -145,9 +145,7 @@
       &::-webkit-scrollbar {
         display: none;
       }
-      &:hover {
-        outline: 0.125rem solid $gray-10;
-      }
+
       .file-icon-uploaded__ewc-class {
         width: 1.5625rem;
         height: 1.5625rem;
@@ -185,7 +183,7 @@
             background-color: $main;
             color: $gray-10;
             cursor: pointer;
-            outline: 0.0625rem solid $gray-10;
+            border: 0.0625rem solid $gray-10;
           }
         }
       }
@@ -280,19 +278,19 @@
     display: flex;
     align-items: center;
     justify-content: space-around;
-    outline: 0.125rem solid rgba($secondary, 0.5);
+    border: 0.125rem solid rgba($secondary, 0.5);
     height: 100%;
     width: 100%;
     border-radius: 0.125rem;
     &:hover {
       transition: 0.5s ease all;
-      outline: 0.125rem solid $secondary;
+      border: 0.125rem solid $secondary;
       cursor: pointer;
     }
     & span {
       color: $gray-10;
-      font-size: 0.8rem;
-      font-weight: 600;
+      font-size: 0.7rem;
+      font-weight: 800;
       width: 7.5rem;
       height: 1.875rem;
       align-items: flex-end;
@@ -318,7 +316,7 @@
     cursor: pointer;
     .send-image-upload__ewc-class {
       transition: 0.5s ease all;
-      outline: 0.125rem solid $secondary;
+      border: 0.125rem solid $secondary;
       cursor: pointer;
     }
   }
@@ -329,7 +327,8 @@
   .send-image-upload__ewc-class {
     transition: 0.5s ease all;
     border: 0.1875rem solid rgba($main, 0);
-    outline: 0.125rem solid rgba($secondary, 0.5);
+    border: 0.125rem solid rgba($secondary, 0.5);
+    padding: 3px;
     border-radius: 50%;
   }
 }
@@ -349,7 +348,7 @@
   justify-content: center;
   .send-image-upload__ewc-class {
     animation: fadeIn 1s infinite;
-    outline: 0.125rem solid $secondary;
+    border: 0.125rem solid $secondary;
     @keyframes fadeIn {
       from {
         opacity: 0.2;

@@ -1,10 +1,11 @@
+/* eslint-disable no-nested-ternary */
 import React, { FC, useCallback, useEffect, useState } from 'react';
 import io from 'socket.io-client';
 import axios, { AxiosRequestConfig } from 'axios';
 import Swal from 'sweetalert2';
-import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
-import { VscListSelection } from 'react-icons/vsc';
-import { MdOutlineSupportAgent } from 'react-icons/md';
+// import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
+// import { VscListSelection } from 'react-icons/vsc';
+// import { MdOutlineSupportAgent } from 'react-icons/md';
 import { Message } from '../shared';
 import { OutOfHourWarningComponent } from '../molecules/InformationMessages/OutOfHourWarning/OutOfHourWarning';
 import { Assistant } from '../molecules/Assistant/Assistant';
@@ -17,23 +18,29 @@ import { BusyAgents } from '../molecules/InformationMessages/BusyAgents/BusyAgen
 import { BotBox } from '../molecules/BotBox/BotBox';
 import { initialMessage } from '../extra';
 import { webchatProps } from './webchat.interface';
+import { Confirmation } from '../molecules/InformationMessages/Confirmation/Confirmation';
 
 export const WebChat: FC<webchatProps> = function () {
   const [socket, setSocket] = useState(null);
   const [setingNameAndEmail, setSetingNameAndEmail] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
+  const [name, setName] = useState(
+    sessionStorage.getItem('webchat_elipse_name') || '',
+  );
+  const [email, setEmail] = useState(
+    sessionStorage.getItem('webchat_elipse_email') || '',
+  );
   const [chatInputDialogue, setChatInputDialogue] = useState('');
-  const [sendingMessage, setSendingMessage] = useState(false);
+  const [sendingMessage, setSendingMessage] = useState(true);
   const [messages, setMessages] = useState([] as Message[]);
   const [uploadActive, setUploadActive] = useState(false);
   const [outOfHourWarning, setOutOfHourWarning] = useState(false);
+  const [conversationFinished, setConversationFinished] = useState(false);
+  const [confirmation, setConfirmation] = useState(false);
+  const [busyAgents, setBusyAgents] = useState(false);
   const [agentName, setAgentName] = useState(
     sessionStorage.getItem('webchat_elipse_agent_name') || '',
   );
-  const [conversationFinished, setConversationFinished] = useState(false);
-  const [busyAgents, setBusyAgents] = useState(false);
   const [svgI, setSvgI] = useState('');
   const [svgBack, setSvgBack] = useState({});
   const [loading, setLoading] = useState(false);
@@ -43,6 +50,12 @@ export const WebChat: FC<webchatProps> = function () {
   );
   const [formFieldsAndAutomatedMessages, setFormFieldsAndAutomatedMessages] =
     useState<Message[]>([]);
+
+  console.log(
+    '[FORM FIELDS AND AUTOMATED MESSAGES]',
+    formFieldsAndAutomatedMessages,
+  );
+  console.log('[AUTOMATED MESSAGES]', automatedMessages);
 
   const getAvatar = useCallback(async () => {
     const { data } = await axios.get(processEnv.avatar);
@@ -155,18 +168,24 @@ export const WebChat: FC<webchatProps> = function () {
                 response.data.result.client.clientId,
               );
               setMessages(response.data.result.messages);
+              sessionStorage.removeItem('allAgentsBusy');
+              sessionStorage.removeItem('outOfHour');
             } else {
+              sessionStorage.removeItem('allAgentsBusy');
+              sessionStorage.removeItem('outOfHour');
               setMessages(response.data.result);
             }
           } else if (response?.data.errorMessage) {
             const errorMess = response.data.errorMessage;
 
             if (errorMess === 'Agents not available') {
-              setMessages(response.data.chat.result.messages);
+              // setMessages(response.data.chat.result.messages);
+              sessionStorage.setItem('allAgentsBusy', 'true');
               setBusyAgents(true);
             }
 
             if (errorMess === 'Out of time') {
+              sessionStorage.setItem('outOfHour', 'true');
               setOutOfHourWarning(true);
             }
           } else {
@@ -216,13 +235,13 @@ export const WebChat: FC<webchatProps> = function () {
     ],
   );
 
-  const handleBackToBot = () => {
-    setToggleBotWithAgent(false);
-    setFormFieldsAndAutomatedMessages([]);
-  };
-  const handleBackToForward = () => {
-    setToggleBotWithAgent(true);
-  };
+  // const handleBackToBot = () => {
+  //   setToggleBotWithAgent(false);
+  //   setFormFieldsAndAutomatedMessages([]);
+  // };
+  // const handleBackToForward = () => {
+  //   setToggleBotWithAgent(true);
+  // };
 
   useEffect(() => {
     if (sessionStorage.getItem('chatId')) {
@@ -251,8 +270,12 @@ export const WebChat: FC<webchatProps> = function () {
     });
 
     socket?.on('finishConversationForWebchat', () => {
+      setName('');
+      setEmail('');
       setMessages([]);
       sessionStorage.removeItem('chatId');
+      sessionStorage.removeItem('webchat_elipse_name');
+      sessionStorage.removeItem('webchat_elipse_email');
       sessionStorage.removeItem('webchat_elipse_agent_name');
       setConversationFinished(true);
       setAgentName('');
@@ -289,7 +312,20 @@ export const WebChat: FC<webchatProps> = function () {
             />
           )}
           {busyAgents && (
-            <BusyAgents setBusyAgents={setBusyAgents} svgBack={svgBack} />
+            <BusyAgents
+              setBusyAgents={setBusyAgents}
+              svgBack={svgBack}
+              handleSendMessage={handleSendMessage}
+              automatedMessages={automatedMessages}
+            />
+          )}
+          {confirmation && sessionStorage.getItem('chatId') && (
+            <Confirmation
+              setConfirmation={setConfirmation}
+              svgBack={svgBack}
+              handleSendMessage={handleSendMessage}
+              automatedMessages={automatedMessages}
+            />
           )}
 
           <Assistant
@@ -298,7 +334,7 @@ export const WebChat: FC<webchatProps> = function () {
             base64Avatar={svgI}
             svgBack={svgBack}
           />
-          {toggleBotWithAgent && (
+          {/* {toggleBotWithAgent && (
             <div className="without-header-back-container__ewc-class">
               <button
                 type="button"
@@ -313,8 +349,8 @@ export const WebChat: FC<webchatProps> = function () {
                 <span />
               </button>
             </div>
-          )}
-          {!toggleBotWithAgent && sessionStorage.getItem('chatId') && (
+          )} */}
+          {/* {!toggleBotWithAgent && sessionStorage.getItem('chatId') && (
             <div className="without-header-back-container__ewc-class">
               <button
                 type="button"
@@ -329,9 +365,11 @@ export const WebChat: FC<webchatProps> = function () {
                 <span />
               </button>
             </div>
-          )}
+          )} */}
           {sessionStorage.getItem('webchat_elipse_name') &&
             sessionStorage.getItem('webchat_elipse_email') &&
+            !sessionStorage.getItem('allAgentsBusy') &&
+            !sessionStorage.getItem('outOfHour') &&
             toggleBotWithAgent && (
               <>
                 <ChatBox
@@ -362,7 +400,6 @@ export const WebChat: FC<webchatProps> = function () {
           {!toggleBotWithAgent && (
             <BotBox
               handleSendMessage={handleSendMessage}
-              // toggleBotWithAgent={toggleBotWithAgent}
               setToggleBotWithAgent={setToggleBotWithAgent}
               automatedMessages={automatedMessages}
               setAutomatedMessages={setAutomatedMessages}
@@ -370,11 +407,14 @@ export const WebChat: FC<webchatProps> = function () {
               setFormFieldsAndAutomatedMessages={
                 setFormFieldsAndAutomatedMessages
               }
+              setConfirmation={setConfirmation}
             />
           )}
 
           {(!sessionStorage.getItem('webchat_elipse_name') ||
-            !sessionStorage.getItem('webchat_elipse_email')) &&
+            !sessionStorage.getItem('webchat_elipse_email') ||
+            sessionStorage.getItem('allAgentsBusy') ||
+            sessionStorage.getItem('outOfHour')) &&
             toggleBotWithAgent && (
               <ChatBoxForm
                 email={email}

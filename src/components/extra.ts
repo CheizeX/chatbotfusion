@@ -5,8 +5,9 @@ export const initialMessage = [
   {
     contentType: ContentTypes.TEXT,
     from: MessageFrom.BOT,
-    content: `¡Hola, estoy aquí para guiarte en los servicios de mediQo!
-      Selecciona una de las siguientes opciones:`,
+    // content: `¡Hola, estoy aquí para guiarte en los servicios de mediQo!
+    //   Selecciona una de las siguientes opciones:`,
+    content: `Hola. ¿En qué podemos ayudarte?`,
   },
 ];
 
