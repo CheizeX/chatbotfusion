@@ -1,11 +1,10 @@
-/* eslint-disable react/jsx-props-no-spreading */
 import React, { FC } from 'react';
-import Warning from '../../../../assets/warning.svg';
 import { webchatProps } from '../../../WebChat/webchat.interface';
 
 export const FinishedConversation: FC<webchatProps> = function ({
   setConversationFinished,
   handleCollapse,
+  svgBack,
 }) {
   const handleClick = () => {
     handleCollapse();
@@ -14,7 +13,7 @@ export const FinishedConversation: FC<webchatProps> = function ({
   return (
     <div className="conversation-finished__ewc-class">
       <div>
-        <img src={Warning} alt="finished" />
+        <img src={svgBack.Warning} alt="finished" />
       </div>
       <h1>CONVERSACION FINALIZADA</h1>
       <span>

@@ -162,7 +162,7 @@
 
 .chat-box-without-name-and-RUT__ewc-class {
   height: 24rem;
-  margin-top: 7px;
+  margin-top: 6px;
   width: 100%;
   border-bottom-left-radius: 0.9375rem;
   border-bottom-right-radius: 0.9375rem;
@@ -171,10 +171,10 @@
   font-family: 'Roboto', sans-serif;
   color: $gray-2;
   text-align: center;
-  outline: none;
+  // outline: none;
   .without-header__ewc-class {
     background-color: $gray-10;
-    height: 30%;
+    height: 30.2%;
     width: 100%;
     margin: 0 auto;
     color: $gray-4;
@@ -208,7 +208,7 @@
     .inp-control__ewc-class {
       width: 90%;
       height: 2.5rem;
-      border: 0.0625rem solid $gray-9;
+      border: none;
       border-radius: 0.3125rem;
       padding-left: 0.625rem;
       color: $gray-3;
@@ -217,11 +217,12 @@
         padding-left: 0.3125rem;
       }
       &:focus {
-        outline: 0.125rem solid rgba($main, 0.7);
+        border: 0.125rem solid rgba($main, 0.7);
+        outline: none;
       }
     }
     .inp-control-error__ewc-class {
-      outline: 0.125rem solid $main-hover;
+      border: 0.125rem solid $main-hover;
     }
     .error-message__ewc-class {
       color: $main;
@@ -240,20 +241,35 @@
       color: $gray-9;
       font-weight: 700;
       font-size: 0.875rem;
-      border-radius: 0.3125rem;
       cursor: pointer;
       margin-top: 0rem;
       background-image: linear-gradient(165deg, $main 0%, $secondary 70%);
       background-size: 200% 100%;
+      display: inline-block;
+      border: none;
+      border-radius: 0.3125rem;
+      transition: all 0.2s ease-in-out;
       &:hover {
-        transition: all 0.5 ease-in-out;
-        background-position: 70% 0;
-        -o-transition: all 0.5s ease-in-out;
-        -webkit-transition: all 0.5s ease-in-out;
-        background-color: $main;
+        animation: gradient 3s infinite;
+        transform: scale(1.01);
       }
       &:active {
-        background-color: $main;
+        animation: gradient 3s infinite;
+        transform: scale(1);
+      }
+    }
+
+    @keyframes gradient {
+      0% {
+        background-position: 0% 50%;
+      }
+
+      50% {
+        background-position: 100% 50%;
+      }
+
+      100% {
+        background-position: 0% 50%;
       }
     }
   }

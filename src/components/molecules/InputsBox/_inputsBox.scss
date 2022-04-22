@@ -17,7 +17,6 @@
     height: 2.5rem;
     outline: none;
     font-size: 1.25rem;
-    outline: none;
     border: 0.125rem solid $gray-9;
     border-radius: 0.3125rem;
     padding-left: 0.9375rem;
@@ -47,7 +46,7 @@
       cursor: pointer;
       .send-image__ewc-class {
         transition: 0.5s ease all;
-        outline: 0.125rem solid $secondary;
+        border: 0.125rem solid $secondary;
         cursor: pointer;
       }
     }
@@ -58,7 +57,8 @@
     .send-image__ewc-class {
       transition: 0.5s ease all;
       border: 0.1875rem solid rgba($main, 0);
-      outline: 0.125rem solid rgba($secondary, 0.5);
+      padding: 3px;
+      border: 0.125rem solid rgba($secondary, 0.5);
       border-radius: 50%;
     }
   }
@@ -86,7 +86,7 @@
     // background: linear-gradient(140deg, $secondary, $main);
     cursor: pointer;
     .file-icon__ewc-class {
-      outline: 0.125rem solid $secondary;
+      border: 0.125rem solid $secondary;
       cursor: pointer;
     }
   }
@@ -121,12 +121,13 @@
   .file-icon__ewc-class {
     transition: 0.5s ease all;
     transform: rotate3d(0, 0, 1, -90deg);
-    border: 0.1875rem solid rgba($main, 0);
-    outline: 0.125rem solid rgba($secondary, 0.3);
+    // border: 0.1875rem solid rgba($main, 0);
+    border: 0.125rem solid rgba($secondary, 0.3);
     border-radius: 50%;
+    padding: 3px;
     &:hover {
       transition: 0.5s ease all;
-      outline: 0.125rem solid $secondary;
+      border: 0.125rem solid $secondary;
       cursor: pointer;
     }
   }
@@ -140,7 +141,7 @@
 
 .upload-active__ewc-class {
   .file-icon__ewc-class {
-    outline: 0.125rem solid $secondary;
+    // outline: 0.125rem solid $secondary;
     transform: rotate3d(0, 0, 1, 90deg);
   }
 }

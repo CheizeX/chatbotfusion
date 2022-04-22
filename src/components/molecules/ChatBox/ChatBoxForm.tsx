@@ -81,6 +81,7 @@ export const ChatBoxForm: FC<webchatProps & BotBoxProps> = function ({
               ? 'inp-control__ewc-class inp-control-error__ewc-class'
               : 'inp-control__ewc-class'
           }
+          value={name}
           placeholder="Nombre Completo"
           onChange={handleLocaleStorageName}
         />
@@ -91,16 +92,17 @@ export const ChatBoxForm: FC<webchatProps & BotBoxProps> = function ({
               ? 'inp-control__ewc-class  inp-control-error__ewc-class '
               : 'inp-control__ewc-class '
           }
+          value={email}
           placeholder="Email"
           onChange={handleLocaleStorageEmail}
         />
         <p className="error-message__ewc-class">{validationErrors}</p>
-        <input
+        <button
           type="button"
           className="but-control__ewc-class"
-          value="ENVIAR"
-          onClick={handleSendButton}
-        />
+          onClick={handleSendButton}>
+          ENVIAR
+        </button>
       </form>
     </div>
   );

@@ -12,6 +12,7 @@ import { ReactSVG } from 'react-svg';
 import { MdAssignmentReturn } from 'react-icons/md';
 import { SpinnerRoundFilled } from 'spinners-react';
 import { GrFormClose } from 'react-icons/gr';
+import axios, { AxiosRequestConfig } from 'axios';
 import {
   ContentTypes,
   DERIVATIONS,
@@ -27,16 +28,18 @@ import { Forms } from '../Forms/Forms';
 interface BotBoxProps {
   automatedMessages: Message[];
   setToggleBotWithAgent: Dispatch<SetStateAction<boolean>>;
+  setConfirmation: Dispatch<SetStateAction<boolean>>;
   setAutomatedMessages: Dispatch<SetStateAction<Message[]>>;
   setFormFieldsAndAutomatedMessages: Dispatch<SetStateAction<Message[]>>;
 }
 
 export const BotBox: FC<webchatProps & BotBoxProps> = function ({
-  setToggleBotWithAgent,
   automatedMessages,
-  setAutomatedMessages,
   base64Avatar,
+  setToggleBotWithAgent,
+  setAutomatedMessages,
   setFormFieldsAndAutomatedMessages,
+  setConfirmation,
 }) {
   const dialogueBoxRef = useRef<HTMLDivElement>(null);
   const [loadingMessage, setLoadingMessage] = useState(false);
@@ -50,7 +53,7 @@ export const BotBox: FC<webchatProps & BotBoxProps> = function ({
     dialogueBoxRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [dialogueBoxRef]);
 
-  const addFormValuesToMessage = () => {
+  const addFormValuesToMessage = async () => {
     // acomodo los campos del FORM para transformarlos en mensajes
     const formValues = formFields.reduce(
       (acc, field) => ({ ...acc, [field.name]: field.value }),
@@ -70,7 +73,7 @@ export const BotBox: FC<webchatProps & BotBoxProps> = function ({
 
     // valido que el formulario sea enviado completo
     if (fieldValues.every((field) => field.value)) {
-      // agrego los campos del FORM al resto de los mensajes
+      // agrego los campos del FORM al resto de los mensajes en el componente padre
       setFormFieldsAndAutomatedMessages([
         ...automatedMessages,
         {
@@ -80,11 +83,13 @@ export const BotBox: FC<webchatProps & BotBoxProps> = function ({
         },
         ...fieldsToMessages,
       ]);
+
       setFormFields([]);
       setIsFormActive(false);
       setLoadingMessage(false);
       scrollToBottom();
       setToggleBotWithAgent(true);
+      // setConfirmation(true);
     }
   };
 
@@ -105,6 +110,7 @@ export const BotBox: FC<webchatProps & BotBoxProps> = function ({
       }
     }, 2000);
   };
+
   const handleAutomatedMessages = (suggestion: any) => {
     const currentTime = new Date();
     localStorage.setItem('lastTime', JSON.stringify(currentTime.getTime()));

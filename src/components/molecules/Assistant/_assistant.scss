@@ -50,6 +50,8 @@
   height: 1.875rem;
   .colapse-button__ewc-class {
     &:hover {
+      transition: all 0.3s ease-in-out;
+      transform: translateY(0.05rem);
       cursor: pointer;
     }
     width: 1.875rem;

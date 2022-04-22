@@ -38,9 +38,9 @@
           height: 1.5625rem;
           border-radius: 1.6875rem;
           margin-right: 0.3125rem;
-          outline: 1px solid $gray-9;
+          border: 1px solid $gray-9;
           background-image: linear-gradient(140deg, $main 0%, $secondary 150%);
-          box-shadow: 0 0.0625rem 0.125rem 0.0625rem rgba($main, 0.5);
+          box-shadow: 0 0.0625rem 0.1rem 0.0625rem rgba($main, 0.3);
         }
       }
       .bot-text-container__bot-ewc-class {
@@ -431,20 +431,19 @@
     transition: all 0.2s ease-in-out;
     background-image: linear-gradient(140deg, $main 0%, $secondary 180%);
     color: $gray-10;
-    border: none;
+    border: 2px solid $gray-10;
     border-radius: 17px;
-    box-shadow: 0rem 0.0625rem 0.2525rem 0rem rgba(0, 0, 0, 0.998);
+    box-shadow: 0rem 0.0625rem 0.1525rem 0rem rgba(0, 0, 0, 0.387);
     font-weight: 500;
     font-size: 12px;
     padding: 5px 15px;
-    margin: 5px 10px;
+    margin: 3px 10px;
     height: fit-content;
-    min-height: 30px;
+    min-height: 35px;
     min-width: 45px;
     max-width: 100%;
     line-height: 1.4;
     text-align: left;
-    outline: 2px solid $gray-10;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -454,6 +453,7 @@
       background-image: linear-gradient(140deg, $main 0%, $main 180%);
       box-shadow: 0rem 0.0625rem 0.6rem 0rem $main;
     }
+
     & > div {
       height: 24px;
       width: 24px;
@@ -490,19 +490,18 @@
   background-image: linear-gradient(140deg, $secondary 0%, $main 180%);
   // background-color: $secondary;
   color: $gray-10;
-  border: none;
   border-radius: 17px;
-  box-shadow: 0rem 0.0625rem 0.2525rem 0rem rgba(0, 0, 0, 0.998);
+  box-shadow: 0rem 0.1125rem 0.2525rem 0rem rgba(0, 0, 0, 0.294);
   font-weight: 500;
   font-size: 12px;
   padding: 0 8px;
   padding-right: 12px;
   margin-right: 10px;
   margin-top: 10px;
-  height: 30px;
+  height: 35px;
   width: fit-content;
   max-width: 100%;
-  outline: 2px solid $gray-10;
+  border: 2px solid $gray-10;
   display: flex;
   align-items: center;
   justify-content: space-between;

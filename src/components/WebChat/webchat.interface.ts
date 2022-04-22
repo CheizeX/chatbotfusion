@@ -31,5 +31,5 @@ export interface webchatProps {
   setEmail?: Dispatch<SetStateAction<string>>;
   setRUT?: Dispatch<SetStateAction<string>>;
   handleCollapse?: () => void;
-  handleSendMessage?: (arg?: Message[]) => void;
+  handleSendMessage?: (arg?: Message[], texto?: string) => void;
 }
